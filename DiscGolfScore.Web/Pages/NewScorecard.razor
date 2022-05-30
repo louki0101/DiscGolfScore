@@ -1,0 +1,84 @@
+﻿@page "/newcard"
+@inject Blazored.LocalStorage.ISyncLocalStorageService localStorage
+@inject NavigationManager NavigationManager
+<PageTitle>New Scorecard</PageTitle>
+
+
+<EditForm Model="@newCard" OnValidSubmit="@HandleValidSubmit">
+    <div class="row mb-3">
+        <label for="loc" class="col-sm-2 col-form-label">Location</label>
+        <div class="col-sm-10">
+            <InputSelect @bind-Value="newCard.Location" class="form-select form-select-lg mb-3" aria-label=".form-select-lg Location" id="loc" >
+              <option></option>
+                @foreach(var l in locations)
+                {
+                 <option value="@l">@l</option>   
+                }
+            </InputSelect>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="loc" class="col-sm-2 col-form-label"><b>OR</b> New Location</label>
+        <div class="col-sm-10">
+            <InputText @bind-Value="newCard.Location" type="text" class="form-control form-control-lg" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="holes" class="col-sm-2 col-form-label"># of Holes</label>
+        <div class="col-sm-10">
+            <InputSelect @bind-Value="newCard.Holes" class="form-select form-select-lg mb-3" aria-label=".form-select-lg Number of Holes" id="holes">
+              <option></option>
+              <option value="9">9</option>
+              <option value="18">18</option>
+            </InputSelect>
+        </div>
+    </div>
+    
+    <button type="submit" class="btn btn-primary" >Create Scorecard</button>
+</EditForm>
+
+
+
+
+
+@code {
+    private DiscGolfScore.Core.ScoreCard newCard = new DiscGolfScore.Core.ScoreCard();
+
+    private List<string> locations = new List<string>();
+
+
+    protected override void OnInitialized()
+    {
+        var storedLocations = localStorage.GetItem<string[]>("locations");
+        locations = (storedLocations ?? new string[] { }).ToList();
+    }
+
+
+    private void HandleValidSubmit()
+    {
+        if(locations.Contains(newCard.Location) == false && string.IsNullOrWhiteSpace( newCard?.Location ) == false)
+        {
+            locations.Add(newCard.Location);
+            localStorage.SetItem("locations", locations);
+        }
+
+
+        var scorecardIds = localStorage.GetItem<int[]>("scorecards");
+        if(scorecardIds == null)
+        {
+            scorecardIds = new int[] { };
+        }
+        var latest = scorecardIds?.OrderByDescending(x => x)?.FirstOrDefault() ?? 0;
+        newCard.Scores = new Dictionary<int, int>();
+        newCard.Id = latest + 1;
+        var newScoreIds = new List<int>(scorecardIds);
+        newScoreIds.Add(newCard.Id);
+
+        localStorage.SetItem("scorecards", newScoreIds.ToArray());
+        localStorage.SetItem("scorecard-" + newCard.Id, newCard);
+
+        NavigationManager.NavigateTo("card/" + newCard.Id);
+    }
+}

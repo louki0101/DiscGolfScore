@@ -1,0 +1,168 @@
+﻿@page "/card/{CardID:int?}"
+@inject Blazored.LocalStorage.ISyncLocalStorageService localStorage
+@inject NavigationManager NavigationManager
+<PageTitle>Scorecard</PageTitle>
+
+
+
+CardID: @myCard.Id
+<div class="container">
+
+    <div class="row gy-5">
+        <div class="col-4">
+            <button class="btn btn-primary btn-block" style="width:100%" @onclick="PrevHole">Prev</button>
+        </div>
+        <div class="col-4">
+            Hole: @currentHole
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary btn-block" style="width:100%" @onclick="NextHole">Next</button>
+        </div>
+    </div>
+
+    <div class="row gy-5">
+        <div class="col-4">
+            <button class="btn btn-primary btn-block" style="width:100%" @onclick="DownScore">Down</button>
+        </div>
+        <div class="col-4">
+            Score: @GetCurrentHoleScore()
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary btn-block" style="width:100%" @onclick="UpScore">Up</button>
+        </div>
+    </div>
+
+
+    <div class="row gy-5">
+        <div class="col-8 offset-4">
+            Overall Score: @GetOverallScore()
+        </div>    
+    </div>
+
+
+</div>
+
+@code {
+
+    private DiscGolfScore.Core.ScoreCard? myCard = null;
+    private int currentHole = 1;
+
+    [Parameter]
+    public int? CardID { get; set; }
+
+    private int GetCurrentHoleScore()
+    {
+        int ret = 0;
+        if(myCard?.Scores != null && myCard.Scores.ContainsKey(currentHole))
+        {
+            ret = myCard.Scores[currentHole];
+        }        
+        return ret;
+    }
+    private int GetOverallScore()
+    {
+        int sum = 0;
+        foreach(var s in myCard.Scores.Keys)
+        {
+            sum += myCard.Scores[s];
+        }
+        return sum;
+    }
+
+    protected override void OnInitialized()
+    {
+        //Lookup latest scorecard if ID not provided
+        if(CardID == null)
+        {
+            var scorecardIds = localStorage.GetItem<int[]>("scorecards");
+            var latest = scorecardIds?.OrderByDescending(x => x)?.FirstOrDefault();
+            CardID = latest ?? -1;
+        }
+
+        //load card
+        myCard = localStorage.GetItem<DiscGolfScore.Core.ScoreCard>("scorecard-" + CardID);
+
+        if(myCard == null)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        if(myCard.Scores == null)
+        {
+            myCard.Scores = new Dictionary<int, int>();
+        }
+
+        var highestHoleRecorded = 0;
+        foreach(var k in myCard.Scores.Keys)
+        {
+            if (k > highestHoleRecorded) highestHoleRecorded = k;
+        }
+        currentHole = highestHoleRecorded;
+    }
+
+    private void SaveCard()
+    {
+        localStorage.SetItem("scorecard-" + myCard.Id, myCard);
+    }
+
+
+    private void PrevHole()
+    {
+        currentHole -= 1;
+        if (currentHole < 1) currentHole = 1;
+
+        //make sure to record a score for this hole (even if its 0)
+        int score = 0;
+        if(myCard.Scores.ContainsKey(currentHole))
+        {
+            score = myCard.Scores[currentHole];
+        }
+        myCard.Scores[currentHole] = score;
+
+        SaveCard();
+    }
+
+    private void NextHole()
+    {
+        currentHole += 1;
+        if (currentHole > myCard.Holes) currentHole = myCard.Holes;
+
+        //make sure to record a score for this hole (even if its 0)
+        int score = 0;
+        if(myCard.Scores.ContainsKey(currentHole))
+        {
+            score = myCard.Scores[currentHole];
+        }
+        myCard.Scores[currentHole] = score;
+
+        SaveCard();
+    }
+
+    private void UpScore()
+    {
+        int score = 0;
+        if(myCard.Scores.ContainsKey(currentHole))
+        {
+            score = myCard.Scores[currentHole];
+        }
+
+        score += 1;
+
+        myCard.Scores[currentHole] = score;
+        SaveCard();
+    }
+
+    private void DownScore()
+    {
+        int score = 0;
+        if(myCard.Scores.ContainsKey(currentHole))
+        {
+            score = myCard.Scores[currentHole];
+        }
+
+        score -= 1;
+
+        myCard.Scores[currentHole] = score;
+        SaveCard();
+    }
+
+}

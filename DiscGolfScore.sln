@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscGolfScore.Web", "DiscGolfScore.Web\DiscGolfScore.Web.csproj", "{BD10096F-50D3-4763-94A2-AFC25A613F92}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscGolfScore.Core", "DiscGolfScore.Core\DiscGolfScore.Core.csproj", "{D739C6CF-4C02-409B-B074-2F47CB9EA55F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD10096F-50D3-4763-94A2-AFC25A613F92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD10096F-50D3-4763-94A2-AFC25A613F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD10096F-50D3-4763-94A2-AFC25A613F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD10096F-50D3-4763-94A2-AFC25A613F92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D739C6CF-4C02-409B-B074-2F47CB9EA55F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D739C6CF-4C02-409B-B074-2F47CB9EA55F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D739C6CF-4C02-409B-B074-2F47CB9EA55F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D739C6CF-4C02-409B-B074-2F47CB9EA55F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EB29F5C7-8921-40F4-AC3C-4BF9028C7C3A}
+	EndGlobalSection
+EndGlobal
