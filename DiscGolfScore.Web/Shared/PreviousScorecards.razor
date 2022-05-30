@@ -1,0 +1,48 @@
+﻿@inject Blazored.LocalStorage.ISyncLocalStorageService localStorage
+@inject NavigationManager NavigationManager
+
+
+
+
+
+<div class="alert alert-dark">
+    <h4>Previous Scorecards</h4>
+    <div class="list-group">
+        @foreach(var card in previousCards)
+        {
+            <a href="card/@card.Key" class="list-group-item list-group-item-action">@card.Value</a>    
+        }        
+    </div>
+</div>
+
+
+@code {
+    private Dictionary<int, string> previousCards { get; set; } = new Dictionary<int, string>();
+
+    protected override void OnInitialized()
+    {
+        var scorecardIds = localStorage.GetItem<int[]>("scorecards")
+            .OrderByDescending(x => x)
+            .Take(10)
+            .ToArray();
+
+        foreach (var cardId in scorecardIds)
+        {
+            //load card
+            var card = localStorage.GetItem<DiscGolfScore.Core.ScoreCard>("scorecard-" + cardId);
+            if (card != null)
+            {
+                if (card.Scores == null) card.Scores = new Dictionary<int, int>();
+                int sum = 0;
+                foreach(var k in card.Scores.Keys)
+                {
+                    sum += card.Scores[k];
+                }
+
+                previousCards.Add(cardId, "" + card.Location + " - " + sum);
+            }
+        }
+    }
+
+
+}
