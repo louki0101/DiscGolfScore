@@ -26,6 +26,8 @@
             .Take(10)
             .ToArray();
 
+        if (scorecardIds == null) scorecardIds = new int[] { };        
+
         foreach (var cardId in scorecardIds)
         {
             //load card

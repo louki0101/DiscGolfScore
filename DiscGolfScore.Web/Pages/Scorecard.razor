@@ -5,37 +5,37 @@
 
 
 
-CardID: @myCard.Id
+<div class="d-flex justify-content-end">[CardID: @myCard.Id]</div>
 <div class="container">
 
-    <div class="row gy-5">
+    <div class="row my-5">
         <div class="col-4">
-            <button class="btn btn-primary btn-block" style="width:100%" @onclick="PrevHole">Prev</button>
+            <button class="" style="width:100%" @onclick="PrevHole"><img src="images/basket_red.png" width="100" height="100" /></button>
+        </div>
+        <div class="col-4 d-flex justify-content-center align-items-center">
+            <span class="badge bg-primary fs-2">Hole: @currentHole</span>
         </div>
         <div class="col-4">
-            Hole: @currentHole
-        </div>
-        <div class="col-4">
-            <button class="btn btn-primary btn-block" style="width:100%" @onclick="NextHole">Next</button>
-        </div>
-    </div>
-
-    <div class="row gy-5">
-        <div class="col-4">
-            <button class="btn btn-primary btn-block" style="width:100%" @onclick="DownScore">Down</button>
-        </div>
-        <div class="col-4">
-            Score: @GetCurrentHoleScore()
-        </div>
-        <div class="col-4">
-            <button class="btn btn-primary btn-block" style="width:100%" @onclick="UpScore">Up</button>
+            <button class="" style="width:100%" @onclick="NextHole"><img src="images/basket_green.png" width="100" height="100" /></button>
         </div>
     </div>
 
+    <div class="row my-5">
+        <div class="col-4">
+            <button class="" style="width:100%" @onclick="DownScore"><img src="images/red_disc.png" width="100" height="100" /></button>
+        </div>
+        <div class="col-4 d-flex justify-content-center align-items-center">            
+            <span class="badge bg-primary fs-2">Score: @GetCurrentHoleScore()</span>
+        </div>
+        <div class="col-4">
+            <button class="" style="width:100%" @onclick="UpScore"><img src="images/green_disc.png" width="100" height="100" /></button>
+        </div>
+    </div>
 
-    <div class="row gy-5">
-        <div class="col-8 offset-4">
-            Overall Score: @GetOverallScore()
+
+    <div class="row my-5">
+        <div class="d-flex justify-content-center align-items-center">
+            <span class="badge bg-primary fs-2">Overall Score: @GetOverallScore()</span>
         </div>    
     </div>
 
